@@ -90,19 +90,27 @@ _DEMO_MODE: bool = (
 # Resource
 # ---------------------------------------------------------------------------
 
+_ws_client = (
+    None
+    if _DEMO_MODE
+    else WorkspaceClient(
+        host=os.environ["DATABRICKS_HOST"],
+        token=os.environ["DATABRICKS_CONNECTION_TOKEN"],
+    )
+)
+
 _pipes_resource = (
     dg.ResourceDefinition.none_resource()
     if _DEMO_MODE
     else PipesDatabricksClient(
-        client=WorkspaceClient(
-            host=os.environ["DATABRICKS_HOST"],
-            token=os.environ["DATABRICKS_CONNECTION_TOKEN"],
-        ),
+        client=_ws_client,
         context_injector=PipesUnityCatalogVolumesContextInjector(
-            volume_path="/Volumes/workspace/workshop/dagster_pipes"
+            client=_ws_client,
+            volume_path="/Volumes/workspace/workshop/dagster_pipes",
         ),
         message_reader=PipesUnityCatalogVolumesMessageReader(
-            volume_path="/Volumes/workspace/workshop/dagster_pipes"
+            client=_ws_client,
+            volume_path="/Volumes/workspace/workshop/dagster_pipes",
         ),
     )
 )
