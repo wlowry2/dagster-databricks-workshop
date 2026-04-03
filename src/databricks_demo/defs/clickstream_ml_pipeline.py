@@ -89,15 +89,6 @@ def clickstream_feature_table(
     task = jobs.SubmitTask.from_dict(
         {
             "task_key": "feature_engineering",
-            "new_cluster": {
-                "spark_version": "15.4.x-scala2.12",
-                "node_type_id": "i3.xlarge",
-                "num_workers": 4,
-                "cluster_log_conf": {
-                    "dbfs": {"destination": "dbfs:/cluster-logs/feature-engineering"},
-                },
-            },
-            "libraries": [{"pypi": {"package": "dagster-pipes"}}],
             "notebook_task": {"notebook_path": notebook_path},
         }
     )
