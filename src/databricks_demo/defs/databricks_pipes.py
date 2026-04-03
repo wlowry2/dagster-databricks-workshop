@@ -72,6 +72,10 @@ import os
 import dagster as dg
 from databricks.sdk import WorkspaceClient
 from dagster_databricks import PipesDatabricksClient
+from dagster_databricks.pipes import (
+    PipesUnityCatalogVolumesContextInjector,
+    PipesUnityCatalogVolumesMessageReader,
+)
 
 # ---------------------------------------------------------------------------
 # Demo flag
@@ -93,7 +97,13 @@ _pipes_resource = (
         client=WorkspaceClient(
             host=os.environ["DATABRICKS_HOST"],
             token=os.environ["DATABRICKS_CONNECTION_TOKEN"],
-        )
+        ),
+        context_injector=PipesUnityCatalogVolumesContextInjector(
+            volume_path="/Volumes/workspace/workshop/dagster_pipes"
+        ),
+        message_reader=PipesUnityCatalogVolumesMessageReader(
+            volume_path="/Volumes/workspace/workshop/dagster_pipes"
+        ),
     )
 )
 

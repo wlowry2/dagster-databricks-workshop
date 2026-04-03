@@ -23,16 +23,16 @@
 # COMMAND ----------
 
 from dagster_pipes import (
-    PipesDbfsContextLoader,
-    PipesDbfsMessageWriter,
+    PipesUnityCatalogVolumesContextLoader,
+    PipesUnityCatalogVolumesMessageWriter,
     open_dagster_pipes,
 )
 
 # COMMAND ----------
 
 with open_dagster_pipes(
-    context_loader=PipesDbfsContextLoader(),
-    message_writer=PipesDbfsMessageWriter(),
+    context_loader=PipesUnityCatalogVolumesContextLoader(),
+    message_writer=PipesUnityCatalogVolumesMessageWriter(),
 ) as pipes:
 
     # ── Read raw clickstream events ────────────────────────────────────────

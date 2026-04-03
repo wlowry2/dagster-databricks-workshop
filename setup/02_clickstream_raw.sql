@@ -8,6 +8,7 @@
 -- =============================================================================
 
 CREATE SCHEMA IF NOT EXISTS workspace.workshop;
+CREATE VOLUME IF NOT EXISTS workspace.workshop.dagster_pipes;
 
 CREATE OR REPLACE TABLE workspace.workshop.clickstream_raw (
   event_id         STRING,
