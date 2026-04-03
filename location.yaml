@@ -1,0 +1,30 @@
+# Single Location Config for Dagster+ UI Upload
+# Use this when adding a location via "Add code location" in Dagster+ UI
+
+location_name: databricks_demo
+
+code_source:
+  module_name: databricks_demo.definitions
+
+# Direct image reference (for pre-built images in ECR)
+# Replace with your ECR image URL: ACCOUNT_ID.dkr.ecr.REGION.amazonaws.com/REPO_NAME:TAG
+image: YOUR_ACCOUNT_ID.dkr.ecr.YOUR_REGION.amazonaws.com/YOUR_REPO_NAME:latest
+
+
+container_context:
+  k8s:
+    namespace: hooli-cloud-prod
+    image_pull_policy: Always  # Top-level K8s config
+
+    run_k8s_config:
+      job_spec_config:
+        ttl_seconds_after_finished: 60
+
+      container_config:
+        resources:
+          requests:
+            cpu: 250m
+            memory: 512Mi
+          limits:
+            cpu: 1000m
+            memory: 2Gi

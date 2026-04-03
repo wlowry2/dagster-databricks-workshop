@@ -1,0 +1,36 @@
+# Dagster+ Hybrid Deployment Configuration for ECR
+# This file is used for GitHub integration / CI/CD deployments
+# For manual location upload via UI, use location.yaml instead
+
+locations:
+  - location_name: databricks_demo
+    code_source:
+      module_name: databricks_demo.definitions
+
+    build:
+      directory: .
+      registry: YOUR_ACCOUNT_ID.dkr.ecr.YOUR_REGION.amazonaws.com/YOUR_REPO_NAME
+
+    container_context:
+      k8s:
+        namespace: dagster
+
+        run_k8s_config:
+          job_spec_config:
+            ttl_seconds_after_finished: 60
+
+          container_config:
+            resources:
+              requests:
+                cpu: 250m
+                memory: 512Mi
+              limits:
+                cpu: 1000m
+                memory: 2Gi
+
+          pod_spec_config:
+            image_pull_policy: Always
+
+# Environment variables should be set in Dagster+ UI:
+# Deployment Settings -> Environment Variables
+# Add: USE_REAL_CONNECTIONS, SNOWFLAKE_*, DATABRICKS_*, etc.

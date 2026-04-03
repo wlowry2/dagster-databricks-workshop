@@ -1,0 +1,17 @@
+version: 0.2
+# Required CodeBuild environment variables:
+#   AWS_ACCOUNT_ID  - your 12-digit AWS account number
+#   AWS_REGION      - e.g. us-west-2
+#   ECR_REPO_NAME   - ECR repository name, e.g. databricks-demo
+#   IMAGE_TAG       - injected by the dagster_deployment asset (commit SHA)
+phases:
+  pre_build:
+    commands:
+      - aws ecr get-login-password --region $AWS_REGION | docker login --username AWS --password-stdin $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com
+  build:
+    commands:
+      - docker build -t $ECR_REPO_NAME:$IMAGE_TAG .
+  post_build:
+    commands:
+      - docker tag $ECR_REPO_NAME:$IMAGE_TAG $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/$ECR_REPO_NAME:$IMAGE_TAG
+      - docker push $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/$ECR_REPO_NAME:$IMAGE_TAG

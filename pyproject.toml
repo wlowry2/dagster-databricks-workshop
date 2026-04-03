@@ -1,0 +1,46 @@
+[project]
+name = "enterprise-demo"
+version = "0.1.0"
+description = "Enterprise Dagster+ Demo showcasing multi-platform orchestration, team collaboration, and AI readiness"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "dagster>=1.12.13",
+    "dagster-webserver>=1.12.13",
+    "dagster-cloud>=1.12.13",
+    "dagster-databricks>=0.28.13",
+    "dagster-snowflake>=0.28.13",
+    "dagster-aws>=0.28.13",
+    "dagster-k8s>=0.28.13",
+    "dagster-docker>=0.28.13",
+    "dagster-pandas>=0.28.13",
+    "dagster-ge>=0.28.13",
+    "great-expectations>=0.18.22",
+    "langchain>=1.2.8",
+    "boto3>=1.42.0",
+    "requests",
+    "prometheus-client>=0.24.1",
+    "databricks-sdk>=0.60.0",
+    "databricks-connect>=15.4.0",
+    "snowflake-snowpark-python>=1.45.0",
+    "pandas>=2.3.3",
+    "pydantic>=2.12.5",
+    "pyyaml>=6.0.3",
+    "dagster-dg-cli>=1.12.20",
+]
+
+[tool.dagster]
+module_name = "databricks_demo.definitions"
+
+[tool.dg]
+directory_type = "project"
+
+[tool.dg.project]
+root_module = "databricks_demo"
+registry_modules = [
+    "databricks_demo.components.scheduled_job_component",
+]
+
+[build-system]
+requires = ["setuptools>=68.0"]
+build-backend = "setuptools.build_meta"

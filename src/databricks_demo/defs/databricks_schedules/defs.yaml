@@ -1,0 +1,15 @@
+# Hourly refresh — customer data validation pipeline
+type: databricks_demo.components.scheduled_job_component.ScheduledJobComponent
+
+attributes:
+  job_name: customer_data_pipeline_hourly
+  cron_schedule: "0 * * * *"  # every hour
+  asset_selection: "group:customer_data_pipeline"
+---
+# Daily refresh — clickstream ML pipeline
+type: databricks_demo.components.scheduled_job_component.ScheduledJobComponent
+
+attributes:
+  job_name: clickstream_ml_pipeline_daily
+  cron_schedule: "0 6 * * *"  # 6 AM UTC daily
+  asset_selection: "group:clickstream_ml_pipeline"
