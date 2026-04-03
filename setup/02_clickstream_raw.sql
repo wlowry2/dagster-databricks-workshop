@@ -1,18 +1,15 @@
 -- =============================================================================
 -- Pipeline 2: Clickstream ML (Dagster Pipes)
--- Creates main.events.clickstream_raw with 5,000 rows of fake event data,
--- and the main.features schema where the notebook will write its output.
+-- Creates workspace.workshop.clickstream_raw with 5,000 rows of fake event data.
+-- The notebook will also write its output to workspace.workshop.clickstream_features.
 --
 -- Used by: clickstream_feature_table asset (clickstream_ml_pipeline.py)
 -- Run this in a Databricks SQL worksheet before running the pipeline.
---
--- Note: adjust catalog/schema if your workspace uses a different default catalog.
 -- =============================================================================
 
-CREATE SCHEMA IF NOT EXISTS main.events;
-CREATE SCHEMA IF NOT EXISTS main.features;  -- notebook writes feature table here
+CREATE SCHEMA IF NOT EXISTS workspace.workshop;
 
-CREATE OR REPLACE TABLE main.events.clickstream_raw (
+CREATE OR REPLACE TABLE workspace.workshop.clickstream_raw (
   event_id         STRING,
   user_id          STRING,
   event_type       STRING,
@@ -20,7 +17,7 @@ CREATE OR REPLACE TABLE main.events.clickstream_raw (
   event_timestamp  TIMESTAMP
 );
 
-INSERT INTO main.events.clickstream_raw
+INSERT INTO workspace.workshop.clickstream_raw
 WITH ids AS (SELECT explode(sequence(1, 5000)) AS id)
 SELECT
   concat('evt_', lpad(cast(id AS STRING), 5, '0')) AS event_id,
@@ -53,9 +50,9 @@ SELECT
   COUNT(*)              AS total_events,
   COUNT(DISTINCT user_id)  AS unique_users,
   COUNT(DISTINCT event_type) AS event_types
-FROM main.events.clickstream_raw;
+FROM workspace.workshop.clickstream_raw;
 
 SELECT event_type, COUNT(*) AS cnt
-FROM main.events.clickstream_raw
+FROM workspace.workshop.clickstream_raw
 GROUP BY event_type
 ORDER BY cnt DESC;

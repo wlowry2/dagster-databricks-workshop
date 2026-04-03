@@ -46,10 +46,10 @@ def raw_clickstream_events(context: dg.AssetExecutionContext) -> dg.MaterializeR
     """Stub representing raw clickstream data from your streaming pipeline.
     In production this would be materialized by your Kafka or Kinesis consumer.
     """
-    context.log.info("Raw clickstream events available at main.events.clickstream_raw")
+    context.log.info("Raw clickstream events available at workspace.workshop.clickstream_raw")
     return dg.MaterializeResult(
         metadata={
-            "table": dg.MetadataValue.text("main.events.clickstream_raw"),
+            "table": dg.MetadataValue.text("workspace.workshop.clickstream_raw"),
             "source": dg.MetadataValue.text("kinesis ingestion"),
         }
     )
@@ -80,7 +80,7 @@ def clickstream_feature_table(
             metadata={
                 "feature_count": dg.MetadataValue.int(47),
                 "row_count": dg.MetadataValue.int(2_400_000),
-                "table": dg.MetadataValue.text("main.features.clickstream_features"),
+                "table": dg.MetadataValue.text("workspace.workshop.clickstream_features"),
                 "mode": dg.MetadataValue.text("demo"),
             }
         )

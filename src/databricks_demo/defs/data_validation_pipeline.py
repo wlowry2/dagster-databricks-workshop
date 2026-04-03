@@ -41,10 +41,10 @@ def raw_customer_table(context: dg.AssetExecutionContext) -> dg.MaterializeResul
     """Stub representing raw data arriving from your ingestion pipeline.
     In production this would be materialized by your ingest job upstream.
     """
-    context.log.info("Raw customer table available at main.default.customers_raw")
+    context.log.info("Raw customer table available at workspace.workshop.customers_raw")
     return dg.MaterializeResult(
         metadata={
-            "table": dg.MetadataValue.text("main.default.customers_raw"),
+            "table": dg.MetadataValue.text("workspace.workshop.customers_raw"),
             "source": dg.MetadataValue.text("upstream ingestion"),
         }
     )
@@ -82,7 +82,7 @@ def validated_customer_data(
     df = spark.sql(
         "SELECT COUNT(*) AS cnt, "
         "SUM(CASE WHEN email IS NULL THEN 1 ELSE 0 END) AS nulls "
-        "FROM main.default.customers_raw"
+        "FROM workspace.workshop.customers_raw"
     )
     row = df.collect()[0]
     row_count = int(row["cnt"])

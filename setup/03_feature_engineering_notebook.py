@@ -36,11 +36,12 @@ with open_dagster_pipes(
 ) as pipes:
 
     # ── Read raw clickstream events ────────────────────────────────────────
-    raw = spark.sql("SELECT * FROM main.events.clickstream_raw")  # noqa: F821
+    raw = spark.sql("SELECT * FROM workspace.workshop.clickstream_raw")  # noqa: F821  # type: ignore[name-defined]
     pipes.log.info(f"Read {raw.count():,} raw events")
 
     # ── Build user-level features ──────────────────────────────────────────
-    features = spark.sql("""  # noqa: F821
+    features = spark.sql(  # noqa: F821  # type: ignore[name-defined]
+        """
         SELECT
             user_id,
             COUNT(*)                                                        AS total_events,
@@ -51,25 +52,26 @@ with open_dagster_pipes(
             COUNT(DISTINCT page_url)                                        AS unique_pages,
             MIN(event_timestamp)                                            AS first_seen,
             MAX(event_timestamp)                                            AS last_seen
-        FROM main.events.clickstream_raw
+        FROM workspace.workshop.clickstream_raw
         GROUP BY user_id
-    """)
+        """
+    )
 
     # ── Write feature table ────────────────────────────────────────────────
-    features.write.mode("overwrite").saveAsTable("main.features.clickstream_features")
+    features.write.mode("overwrite").saveAsTable("workspace.workshop.clickstream_features")
 
     row_count    = features.count()
     feature_cols = len(features.columns) - 1  # exclude user_id
 
-    pipes.log.info(f"Wrote {row_count} users, {feature_cols} features to main.features.clickstream_features")
+    pipes.log.info(f"Wrote {row_count} users, {feature_cols} features to workspace.workshop.clickstream_features")
 
     # ── Report back to Dagster ─────────────────────────────────────────────
     # This metadata appears on the asset in the Dagster UI
     pipes.report_asset_materialization(
         metadata={
-            "row_count":     {"raw_value": row_count,                                "type": "int"},
-            "feature_count": {"raw_value": feature_cols,                             "type": "int"},
-            "output_table":  {"raw_value": "main.features.clickstream_features",     "type": "text"},
-            "source_table":  {"raw_value": "main.events.clickstream_raw",            "type": "text"},
+            "row_count":     {"raw_value": row_count,                                  "type": "int"},
+            "feature_count": {"raw_value": feature_cols,                               "type": "int"},
+            "output_table":  {"raw_value": "workspace.workshop.clickstream_features",  "type": "text"},
+            "source_table":  {"raw_value": "workspace.workshop.clickstream_raw",       "type": "text"},
         }
     )

@@ -95,7 +95,7 @@ with open_dagster_pipes() as pipes:
     pipes.report_asset_materialization(
         metadata={
             "row_count": 99_000,
-            "source_table": "main.default.customers",
+            "source_table": "workspace.workshop.customers_raw",
         }
     )
 ```

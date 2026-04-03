@@ -1,16 +1,14 @@
 -- =============================================================================
 -- Pipeline 1: Customer Data Validation (Databricks Connect)
--- Creates main.default.customers_raw with 1,500 rows of fake customer data.
+-- Creates workspace.workshop.customers_raw with 1,500 rows of fake customer data.
 --
 -- Used by: validated_customer_data asset (data_validation_pipeline.py)
 -- Run this in a Databricks SQL worksheet before running the pipeline.
---
--- Note: adjust catalog/schema if your workspace uses a different default catalog.
 -- =============================================================================
 
-CREATE SCHEMA IF NOT EXISTS main.default;
+CREATE SCHEMA IF NOT EXISTS workspace.workshop;
 
-CREATE OR REPLACE TABLE main.default.customers_raw (
+CREATE OR REPLACE TABLE workspace.workshop.customers_raw (
   customer_id  STRING,
   name         STRING,
   email        STRING,   -- ~3% null to demonstrate null-rate validation
@@ -18,7 +16,7 @@ CREATE OR REPLACE TABLE main.default.customers_raw (
   created_at   TIMESTAMP
 );
 
-INSERT INTO main.default.customers_raw
+INSERT INTO workspace.workshop.customers_raw
 WITH ids AS (SELECT explode(sequence(1, 1500)) AS id)
 SELECT
   concat('cust_', lpad(cast(id AS STRING), 4, '0')) AS customer_id,
@@ -54,4 +52,4 @@ SELECT
   SUM(CASE WHEN email IS NULL THEN 1 ELSE 0 END)               AS null_emails,
   round(SUM(CASE WHEN email IS NULL THEN 1 ELSE 0 END) / COUNT(*) * 100, 2) AS null_pct,
   COUNT(DISTINCT status)                                        AS status_values
-FROM main.default.customers_raw;
+FROM workspace.workshop.customers_raw;

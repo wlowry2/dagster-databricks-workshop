@@ -25,13 +25,6 @@ RUN mkdir -p $DAGSTER_HOME
 # Expose port for Dagster gRPC server
 EXPOSE 4000
 
-# Fetch Databricks workspace state at build time (requires DATABRICKS_HOST and DATABRICKS_CONNECTION_TOKEN build args)
-ARG DATABRICKS_HOST
-ARG DATABRICKS_CONNECTION_TOKEN
-RUN if [ -n "$DATABRICKS_HOST" ] && [ -n "$DATABRICKS_CONNECTION_TOKEN" ]; then \
-      DATABRICKS_HOST=$DATABRICKS_HOST DATABRICKS_CONNECTION_TOKEN=$DATABRICKS_CONNECTION_TOKEN \
-      dg utils refresh-defs-state --project-dir /opt/dagster/app; \
-    fi
-
-# Default command (will be overridden by Dagster+ agent)
-CMD ["dagster", "api", "grpc", "-h", "0.0.0.0", "-p", "4000", "-m", "databricks_demo.definitions"]
+# Default command — refresh Databricks workspace state at startup (uses runtime env vars),
+# then start the gRPC server
+CMD ["sh", "-c", "dg utils refresh-defs-state --project-dir /opt/dagster/app && dagster api grpc -h 0.0.0.0 -p 4000 -m databricks_demo.definitions"]
