@@ -39,6 +39,7 @@ directory_type = "project"
 root_module = "databricks_demo"
 registry_modules = [
     "databricks_demo.components.scheduled_job_component",
+    "databricks_demo.components.databricks_workspace_component",
 ]
 
 [build-system]

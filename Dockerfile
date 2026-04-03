@@ -27,4 +27,4 @@ EXPOSE 4000
 
 # Default command — refresh Databricks workspace state at startup (uses runtime env vars),
 # then start the gRPC server
-CMD ["sh", "-c", "dg utils refresh-defs-state --target-path /opt/dagster/app && dagster api grpc -h 0.0.0.0 -p 4000 -m databricks_demo.definitions"]
+CMD ["dagster", "api", "grpc", "-h", "0.0.0.0", "-p", "4000", "-m", "databricks_demo.definitions"]

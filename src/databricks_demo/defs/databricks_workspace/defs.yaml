@@ -1,18 +1,5 @@
-type: dagster_databricks.DatabricksWorkspaceComponent
+type: databricks_demo.components.databricks_workspace_component.DatabricksWorkspaceComponent
 
 attributes:
-  workspace:
-    host: "{{ env.DATABRICKS_HOST }}"
-    token: "{{ env.DATABRICKS_CONNECTION_TOKEN }}"
-
-  # Discovers ALL jobs in the workspace by default.
-  # To filter to specific jobs, uncomment and set DATABRICKS_JOB_ID in your .env:
-  #   Workflows UI > click your job > Job ID is in the URL
-  #
-  # databricks_filter:
-  #   include_jobs:
-  #     job_ids: ["{{ env.DATABRICKS_JOB_ID }}"]
-
-  defs_state:
-    management_type: LOCAL_FILESYSTEM
-    refresh_if_dev: false
+  job_id: "{{ env.DATABRICKS_JOB_ID }}"
+  group_name: databricks_workspace
